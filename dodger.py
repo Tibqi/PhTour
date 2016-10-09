@@ -111,6 +111,12 @@ while True:
                 if event.key == K_DOWN or event.key == ord('s'):
                     moveDown = True
                     moveUp = False
+                if event.key == ord('m'):
+                    if musicPlaying:
+                        pygame.mixer.music.stop()
+                    else:
+                        pygame.mixer.music.play(-1, 0.0)
+                    musicPlaying = not musicPlaying
 
             if event.type == KEYUP:
                 if event.key == ord('z'):
@@ -129,12 +135,6 @@ while True:
                     moveUp = False
                 if event.key == K_DOWN or event.key == ord('s'):
                     moveDown = False
-                if event.key == ord('m'):
-                    if musicPlaying:
-                        pygame.mixer.music.stop()
-                    else:
-                        pygame.mixer.music.play(-1, 0.0)
-                    musicPlaying = not musicPlaying
 
             if event.type == MOUSEMOTION:
                 # If the mouse moves, move the player where the cursor is.
