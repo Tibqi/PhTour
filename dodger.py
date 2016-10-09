@@ -2,21 +2,23 @@ import pygame, random, sys, json
 from pygame.locals import *
 from settings import * # import constant variables from separate settings file
 
-def terminate(topScore):
-    topScoreJson = json.dumps(topScore)
+def terminate(topScore, musicPlaying):
+    topScoreJs = json.dumps(topScore)
+    musicPlayingJs = json.dumps(musicPlaying)
     with open('savegame.txt', 'w') as saveFile:
-        saveFile.write(topScoreJson + '\n')
+        saveFile.write(topScoreJs + '\n')
+        saveFile.write(musicPlayingJs)
     pygame.quit()
     sys.exit()
 
-def waitForPlayerToPressKey(topScore):
+def waitForPlayerToPressKey(topScore, musicPlaying):
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
-                terminate(topScore)
+                terminate(topScore, musicPlaying)
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    terminate(topScore)
+                    terminate(topScore, musicPlaying)
                 return
 
 def playerHasHitBaddie(playerRect, baddies):
@@ -58,12 +60,14 @@ drawText('Dodger', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
 drawText('Press a key to start.', font, windowSurface, (WINDOWWIDTH / 3) - 30, (WINDOWHEIGHT / 3) + 50)
 pygame.display.update()
 
+savedVariables = []
 with open('savegame.txt', 'r') as saveFile:
-    topScoreJson = saveFile.read()
-topScore = json.loads(topScoreJson)
-musicPlaying = True
+    for line in saveFile:
+        savedVariables.append(line)
+topScore = json.loads(savedVariables[0])
+musicPlaying = json.loads(savedVariables[1])
 
-waitForPlayerToPressKey(topScore)
+waitForPlayerToPressKey(topScore, musicPlaying)
 
 while True:
     # set up the start of the game
@@ -81,7 +85,7 @@ while True:
 
         for event in pygame.event.get():
             if event.type == QUIT:
-                terminate(topScore)
+                terminate(topScore, musicPlaying)
 
             if event.type == KEYDOWN:
                 if event.key == ord('z'):
@@ -92,7 +96,7 @@ while True:
                     drawText('PAUSED', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
                     drawText('Press a key to continue.', font, windowSurface, (WINDOWWIDTH / 3) - 30, (WINDOWHEIGHT / 3) + 50)
                     pygame.display.update()
-                    waitForPlayerToPressKey(topScore)
+                    waitForPlayerToPressKey(topScore, musicPlaying)
                 if event.key == K_LEFT or event.key == ord('a'):
                     moveRight = False
                     moveLeft = True
@@ -120,7 +124,7 @@ while True:
                     slowCheat = False
                     score = 0
                 if event.key == K_ESCAPE:
-                    terminate(topScore)
+                    terminate(topScore, musicPlaying)
                 if event.key == K_LEFT or event.key == ord('a'):
                     moveLeft = False
                 if event.key == K_RIGHT or event.key == ord('d'):
@@ -212,6 +216,6 @@ while True:
     drawText('GAME OVER', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
     drawText('Press a key to play again.', font, windowSurface, (WINDOWWIDTH / 3) - 80, (WINDOWHEIGHT / 3) + 50)
     pygame.display.update()
-    waitForPlayerToPressKey(topScore)
+    waitForPlayerToPressKey(topScore, musicPlaying)
 
     gameOverSound.stop()
