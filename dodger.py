@@ -66,6 +66,7 @@ waitForPlayerToPressKey()
 
 
 topScore = 0 # meg kéne csinálni, hogy megőrízze játék bezárás után ref: codecademy python kurzus, doksi input/output
+musicPlaying = True
 
 while True:
     # set up the start of the game
@@ -75,8 +76,9 @@ while True:
     moveLeft = moveRight = moveUp = moveDown = False
     reverseCheat = slowCheat = False
     baddieAddCounter = 0
-    pygame.mixer.music.play(-1, 0.0)
-
+    if musicPlaying:
+        pygame.mixer.music.play(-1, 0.0)
+    
     while True: # the game loop runs while the game part is playing
         score += 1 # increase score
 
@@ -124,6 +126,12 @@ while True:
                     moveUp = False
                 if event.key == K_DOWN or event.key == ord('s'):
                     moveDown = False
+                if event.key == ord('m'):
+                    if musicPlaying:
+                        pygame.mixer.music.stop()
+                    else:
+                        pygame.mixer.music.play(-1, 0.0)
+                    musicPlaying = not musicPlaying
                           
             if event.type == MOUSEMOTION:
                 # If the mouse moves, move the player where the cursor is.
@@ -195,7 +203,8 @@ while True:
 
     # Stop the game and show the "Game Over" screen.
     pygame.mixer.music.stop()
-    gameOverSound.play()
+    if musicPlaying:
+        gameOverSound.play()
 
     drawText('GAME OVER', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
     drawText('Press a key to play again.', font, windowSurface, (WINDOWWIDTH / 3) - 80, (WINDOWHEIGHT / 3) + 50)
