@@ -57,7 +57,7 @@ pygame.mixer.music.load('background.mid')
 playerImage = pygame.image.load('player.png')
 playerRect = playerImage.get_rect()
 baddieImage = pygame.image.load('baddie.png')
-soundIcon = pygame.Rect(556, 20, 24, 24)
+soundIcon = pygame.Rect((WINDOWWIDTH - 44), 20, 24, 24)
 soundIconImageOn = pygame.image.load('LoudL_24px.png')
 soundIconImageOff = pygame.image.load('MuteL_24px.png')
 
