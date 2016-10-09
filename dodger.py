@@ -1,8 +1,11 @@
-import pygame, random, sys
+import pygame, random, sys, pprint, savedScores
 from pygame.locals import *
 from settings import * # import constant variables from separate settings file
 
 def terminate():
+    scoresFile = open('.//savedScores.py', 'w')
+    scoresFile.write('topScore = ' + pprint.pformat(savedScores.topScore) + '\n')
+    scoresFile.close()
     pygame.quit()
     sys.exit()
 
@@ -57,7 +60,6 @@ pygame.display.update()
 waitForPlayerToPressKey()
 
 
-topScore = 0 # meg kéne csinálni, hogy megőrízze játék bezárás után ref: codecademy python kurzus, doksi input/output
 musicPlaying = True
 
 while True:
@@ -174,7 +176,7 @@ while True:
 
         # Draw the score and top score.
         drawText('Score: %s' % (score), font, windowSurface, 10, 0)
-        drawText('Top score: %s' % (topScore), font, windowSurface, 10, 40)
+        drawText('Top score: %s' % (savedScores.topScore), font, windowSurface, 10, 40)
 
         # Draw the player's rectangle
         windowSurface.blit(playerImage, playerRect)
@@ -193,8 +195,8 @@ while True:
 
         # Check if any of the baddies have hit the player.
         if playerHasHitBaddie(playerRect, baddies):
-            if score > topScore:
-                topScore = score # set new top score
+            if score > savedScores.topScore:
+                savedScores.topScore = score # set new top score
             break
 
         mainClock.tick(FPS)
