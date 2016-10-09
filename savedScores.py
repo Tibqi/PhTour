@@ -1,1 +1,0 @@
-topScore = 0
