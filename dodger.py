@@ -57,6 +57,9 @@ pygame.mixer.music.load('background.mid')
 playerImage = pygame.image.load('player.png')
 playerRect = playerImage.get_rect()
 baddieImage = pygame.image.load('baddie.png')
+soundIcon = pygame.Rect(556, 20, 24, 24)
+soundIconImageOn = pygame.image.load('LoudL_24px.png')
+soundIconImageOff = pygame.image.load('MuteL_24px.png')
 
 # show the "start" screen
 drawText('Dodger', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
@@ -78,7 +81,7 @@ while True:
     baddieAddCounter = 0
     if musicPlaying:
         pygame.mixer.music.play(-1, 0.0)
-    
+
     while True: # the game loop runs while the game part is playing
         score += 1 # increase score
 
@@ -132,7 +135,7 @@ while True:
                     else:
                         pygame.mixer.music.play(-1, 0.0)
                     musicPlaying = not musicPlaying
-                          
+
             if event.type == MOUSEMOTION:
                 # If the mouse moves, move the player where the cursor is.
                 playerRect.move_ip(event.pos[0] - playerRect.centerx, event.pos[1] - playerRect.centery)
@@ -190,6 +193,12 @@ while True:
         # Draw each baddie
         for b in baddies:
             windowSurface.blit(b['surface'], b['rect'])
+
+        # Draw sound icon
+        if musicPlaying:
+            windowSurface.blit(soundIconImageOn, soundIcon)
+        else:
+            windowSurface.blit(soundIconImageOff, soundIcon)
 
         pygame.display.update()
 
