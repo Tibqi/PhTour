@@ -144,9 +144,9 @@ while True:
         if baddieAddCounter == ADDNEWBADDIERATE:
             baddieAddCounter = 0
             baddieSize = random.randint(BADDIEMINSIZE, BADDIEMAXSIZE)
-            newBaddie = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH-baddieSize), 0 - baddieSize, baddieSize, baddieSize),
+            newBaddie = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH-baddieSize), 0 - (baddieSize * 2), baddieSize, (baddieSize * 2)),
                          'speed': random.randint(BADDIEMINSPEED, BADDIEMAXSPEED),
-                         'surface':pygame.transform.scale(baddieImage, (baddieSize, baddieSize)),
+                         'surface':pygame.transform.scale(baddieImage, (baddieSize, (baddieSize * 2))),
                         }
 
             baddies.append(newBaddie)
