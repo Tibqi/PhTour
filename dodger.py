@@ -48,9 +48,9 @@ gameOverSound = pygame.mixer.Sound('gameover.wav')
 pygame.mixer.music.load('background.ogg')
 
 # set up images
-playerImage = pygame.image.load('player.png')
+playerImage = pygame.image.load('player.png').convert()
 playerRect = playerImage.get_rect()
-baddieImage = pygame.image.load('baddie.png')
+baddieImage = pygame.image.load('baddie.png').convert()
 soundIcon = pygame.Rect((WINDOWWIDTH - 44), 20, 24, 24)
 soundIconImageOn = pygame.image.load('LoudL_24px.png')
 soundIconImageOff = pygame.image.load('MuteL_24px.png')
@@ -60,6 +60,7 @@ drawText('Dodger', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
 drawText('Press a key to start.', font, windowSurface, (WINDOWWIDTH / 3) - 30, (WINDOWHEIGHT / 3) + 50)
 pygame.display.update()
 
+# load saved scores and setting
 savedVariables = []
 with open('savegame.txt', 'r') as saveFile:
     for line in saveFile:
