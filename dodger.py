@@ -33,6 +33,21 @@ def drawText(text, font, surface, x, y):
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
 
+def loadSavedSetting():
+    savedVariables = []
+    try:
+        with open('savegame.txt', 'r') as saveFile:
+            for line in saveFile:
+                savedVariables.append(line)
+        topScore = json.loads(savedVariables[0])
+        musicPlaying = json.loads(savedVariables[1])
+        error = 0 # will be used later to show error message in the menu
+    except (FileNotFoundError, IndexError):
+        topScore = 0
+        musicPlaying = True
+        error = 1
+    return topScore, musicPlaying, error
+
 # set up pygame, the window, and the mouse cursor
 pygame.init()
 mainClock = pygame.time.Clock()
@@ -60,13 +75,8 @@ drawText('Dodger', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
 drawText('Press a key to start.', font, windowSurface, (WINDOWWIDTH / 3) - 30, (WINDOWHEIGHT / 3) + 50)
 pygame.display.update()
 
-# load saved scores and setting
-savedVariables = []
-with open('savegame.txt', 'r') as saveFile:
-    for line in saveFile:
-        savedVariables.append(line)
-topScore = json.loads(savedVariables[0])
-musicPlaying = json.loads(savedVariables[1])
+# load saved scores and sound setting
+topScore, musicPlaying, error = loadSavedSetting()
 
 waitForPlayerToPressKey(topScore, musicPlaying)
 
