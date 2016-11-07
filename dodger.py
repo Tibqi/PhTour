@@ -53,7 +53,7 @@ pygame.init()
 mainClock = pygame.time.Clock()
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 pygame.display.set_caption('Dodger')
-pygame.mouse.set_visible(False)
+pygame.mouse.set_visible(True)
 
 # set up fonts
 font = pygame.font.SysFont(None, 48)
@@ -70,18 +70,63 @@ soundIcon = pygame.Rect((WINDOWWIDTH - 44), 20, 24, 24)
 soundIconImageOn = pygame.image.load('LoudL_24px.png')
 soundIconImageOff = pygame.image.load('MuteL_24px.png')
 
-# show the "start" screen
-drawText('Dodger', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
-drawText('Press a key to start.', font, windowSurface, (WINDOWWIDTH / 3) - 30, (WINDOWHEIGHT / 3) + 50)
+# set up the start menu
+# show title
+drawText('Dodger', font, windowSurface, (WINDOWWIDTH / 2) - 50, (WINDOWHEIGHT / 4))
+drawText('Press the button to start', font, windowSurface, (WINDOWWIDTH / 4) - 40, (WINDOWHEIGHT / 4) + 50)
+
+# show start game button
+menuFont = pygame.font.SysFont(None, 20)
+menuText = menuFont.render('Start game', 1, BACKGROUNDCOLOR, TEXTCOLOR)
+menuRect = menuText.get_rect()
+menuRect.centerx = windowSurface.get_rect().centerx
+menuRect.centery = windowSurface.get_rect().centery
+button = pygame.Rect(menuRect.left - 5, menuRect.top - 5, menuRect.width + 10, menuRect.height + 10)
+pygame.draw.rect(windowSurface, TEXTCOLOR, button) # maybe with freetype.font padding?
+windowSurface.blit(menuText, menuRect)
+
+# update display
 pygame.display.update()
 
 # load saved scores and sound setting
 topScore, musicPlaying, error = loadSavedSetting()
 
-waitForPlayerToPressKey(topScore, musicPlaying)
+# set up variables for the menu
+startGame = 0 # set to 1 when clicking on the start menu button
+menuActive = False
+# menu loop
+while 1:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            terminate(topScore, musicPlaying)
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                terminate(topScore, musicPlaying)
+        if event.type == MOUSEBUTTONUP:
+            if button.collidepoint(event.pos[0], event.pos[1]):
+                startGame = 1
+                # ide jön még valami button push effect pl. deflate with 1 pixel, esetleg szín váltás?
+
+    if button.collidepoint(pygame.mouse.get_pos()) and not menuActive:
+        menuActive = True
+        activeMenu = pygame.Surface((button.width, button.height))
+        activeMenu.fill((251,51,0))
+        activeMenu.set_alpha(50)
+        windowSurface.blit(activeMenu, button)
+    elif not button.collidepoint(pygame.mouse.get_pos()):
+        menuActive = False
+        pygame.draw.rect(windowSurface, TEXTCOLOR, button) # maybe with freetype.font padding?
+        windowSurface.blit(menuText, menuRect)
+
+    if startGame:
+        break
+
+    pygame.display.update(button)
+    mainClock.tick(FPS)
 
 while True:
     # set up the start of the game
+    pygame.mouse.set_visible(False)
     baddies = []
     score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
